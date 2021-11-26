@@ -106,27 +106,23 @@ Style.map("Fun.TCheckbutton",
           foreground=[('active', '#1A5276')])
 
 check_sfun = tk.BooleanVar()
-cbx_s = ttk.Checkbutton(master=fr_funciones, text="S(t)", style="Fun.TCheckbutton", variable=check_sfun).place(relx=0.2,
-                                                                                                               rely=0.5,
-                                                                                                               anchor=CENTER)
+cbx_s = ttk.Checkbutton(master=fr_funciones, text="S(t)", style="Fun.TCheckbutton", variable=check_sfun)
+cbx_s.place(relx=0.2, rely=0.5, anchor=CENTER)
 check_sfun.set(True)
 
 check_efun = tk.BooleanVar()
-cbx_e = ttk.Checkbutton(master=fr_funciones, text="E(t)", style="Fun.TCheckbutton", variable=check_efun).place(relx=0.4,
-                                                                                                               rely=0.5,
-                                                                                                               anchor=CENTER)
+cbx_e = ttk.Checkbutton(master=fr_funciones, text="E(t)", style="Fun.TCheckbutton", variable=check_efun)
+cbx_e.place(relx=0.4, rely=0.5, anchor=CENTER)
 check_efun.set(True)
 
 check_ifun = tk.BooleanVar()
-cbx_i = ttk.Checkbutton(master=fr_funciones, text="I(t)", style="Fun.TCheckbutton", variable=check_ifun).place(relx=0.6,
-                                                                                                               rely=0.5,
-                                                                                                               anchor=CENTER)
+cbx_i = ttk.Checkbutton(master=fr_funciones, text="I(t)", style="Fun.TCheckbutton", variable=check_ifun)
+cbx_i.place(relx=0.6, rely=0.5, anchor=CENTER)
 check_ifun.set(True)
 
 check_lfun = tk.BooleanVar()
-cbx_l = ttk.Checkbutton(master=fr_funciones, text="L(t)", style="Fun.TCheckbutton", variable=check_lfun).place(relx=0.8,
-                                                                                                               rely=0.5,
-                                                                                                               anchor=CENTER)
+cbx_l = ttk.Checkbutton(master=fr_funciones, text="L(t)", style="Fun.TCheckbutton", variable=check_lfun)
+cbx_l.place(relx=0.8, rely=0.5, anchor=CENTER)
 check_lfun.set(True)
 
 # fr_tiempo
@@ -135,8 +131,23 @@ Style.configure('Time.TLabel', font=('Agency FB', 25, 'bold'), foreground='#c9bc
 
 label_time = ttk.Label(master=fr_tiempo, text="Tiempo de simulación", style="Title.TLabel").place(relx=0.5, rely=0.3,
                                                                                                   anchor=CENTER)
-entry_initial = ttk.Entry(master=fr_tiempo, font=('Agency FB', 25, 'bold'), width=11).place(relx=0.2, rely=0.7, anchor=CENTER)
-entry_final = ttk.Entry(master=fr_tiempo, font=('Agency FB', 25, 'bold'), width=11).place(relx=0.6, rely=0.7, anchor=CENTER)
+
+
+def validate_year(P):
+    return P.isdigit()
+
+
+num_initalYear = tk.StringVar()
+entry_initial = ttk.Entry(master=fr_tiempo, textvariable=num_initalYear, font=('Agency FB', 25, 'bold'), width=11,
+                          validate="key",
+                          validatecommand=(fr_tiempo.register(validate_year), "%P"))
+entry_initial.place(relx=0.2, rely=0.7, anchor=CENTER)
+
+num_finalYear = tk.StringVar()
+entry_final = ttk.Entry(master=fr_tiempo, textvariable=num_finalYear, font=('Agency FB', 25, 'bold'), width=11,
+                        validate="key",
+                        validatecommand=(fr_tiempo.register(validate_year), "%P"))
+entry_final.place(relx=0.6, rely=0.7, anchor=CENTER)
 
 label_total = ttk.Label(master=fr_tiempo, text="134 años", style="Time.TLabel").place(relx=0.9, rely=0.7, anchor=CENTER)
 

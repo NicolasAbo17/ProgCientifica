@@ -24,11 +24,11 @@ fr_grafica.config(width=475, height=250)
 
 fr_funciones = tk.Frame(master=window)
 fr_funciones.place(x=25, y=400)
-fr_funciones.config(bg="#F4D03F", width=475, height=75)
+fr_funciones.config(width=475, height=75)
 
 fr_tiempo = tk.Frame(master=window)
 fr_tiempo.place(x=25, y=500)
-fr_tiempo.config(bg="#F4D03F", width=475, height=150)
+fr_tiempo.config(width=475, height=150)
 
 fr_parametros = tk.Frame(master=window)
 fr_parametros.place(x=550, y=25)
@@ -40,8 +40,6 @@ fr_solucion.config(bg="#F4D03F", width=325, height=300)
 
 
 # Implementacion de los frames
-
-# NICOLAS ABONDANO
 # fr_buttons
 def exportar():
     print("Exportar")
@@ -51,16 +49,17 @@ def importar():
     print("Importar")
 
 
-Style.configure('1.TButton', font=('Agency FB', 17, 'bold'), foreground='#3618c9', background='#1b1052', padding=0)
-Style.map("1.TButton",
+Style.configure('primary.TButton', font=('Agency FB', 17, 'bold'), foreground='#102c59', background='#1b1052',
+                padding=0)
+Style.map("primary.TButton",
           foreground=[('pressed', '#0e0926'), ('active', '#1A5276')],
           background=[('pressed', '!disabled', '#2809ba'), ('active', '#157bbd')])
-btn_exportar = ttk.Button(master=fr_buttons, text="Exportar", style="1.TButton", command=exportar).grid(row=0, column=0,
-                                                                                                        padx=60,
-                                                                                                        pady=12.5)
-btn_importar = ttk.Button(master=fr_buttons, text="Importar", style="1.TButton", command=importar).grid(row=0, column=1,
-                                                                                                        padx=60,
-                                                                                                        pady=12.5)
+btn_exportar = ttk.Button(master=fr_buttons, text="Exportar", style="primary.TButton", command=exportar).place(relx=0.3,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
+btn_importar = ttk.Button(master=fr_buttons, text="Importar", style="primary.TButton", command=importar).place(relx=0.7,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
 
 
 # fr_grafica
@@ -101,9 +100,45 @@ def grafica():
 
 grafica()
 
-# NICOLAS ZUÑIGA
 # fr_funciones
+Style.configure('Fun.TCheckbutton', font=('Agency FB', 17, 'bold'), foreground='#102c59', padding=0)
+Style.map("Fun.TCheckbutton",
+          foreground=[('active', '#1A5276')])
+
+check_sfun = tk.BooleanVar()
+cbx_s = ttk.Checkbutton(master=fr_funciones, text="S(t)", style="Fun.TCheckbutton", variable=check_sfun).place(relx=0.2,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
+check_sfun.set(True)
+
+check_efun = tk.BooleanVar()
+cbx_e = ttk.Checkbutton(master=fr_funciones, text="E(t)", style="Fun.TCheckbutton", variable=check_efun).place(relx=0.4,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
+check_efun.set(True)
+
+check_ifun = tk.BooleanVar()
+cbx_i = ttk.Checkbutton(master=fr_funciones, text="I(t)", style="Fun.TCheckbutton", variable=check_ifun).place(relx=0.6,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
+check_ifun.set(True)
+
+check_lfun = tk.BooleanVar()
+cbx_l = ttk.Checkbutton(master=fr_funciones, text="L(t)", style="Fun.TCheckbutton", variable=check_lfun).place(relx=0.8,
+                                                                                                               rely=0.5,
+                                                                                                               anchor=CENTER)
+check_lfun.set(True)
+
 # fr_tiempo
+Style.configure('Title.TLabel', font=('Agency FB', 25, 'bold'), foreground='#102c59', padding=0)
+Style.configure('Time.TLabel', font=('Agency FB', 25, 'bold'), foreground='#c9bc06', padding=0)
+
+label_time = ttk.Label(master=fr_tiempo, text="Tiempo de simulación", style="Title.TLabel").place(relx=0.5, rely=0.3,
+                                                                                                  anchor=CENTER)
+entry_initial = ttk.Entry(master=fr_tiempo, font=('Agency FB', 25, 'bold'), width=11).place(relx=0.2, rely=0.7, anchor=CENTER)
+entry_final = ttk.Entry(master=fr_tiempo, font=('Agency FB', 25, 'bold'), width=11).place(relx=0.6, rely=0.7, anchor=CENTER)
+
+label_total = ttk.Label(master=fr_tiempo, text="134 años", style="Time.TLabel").place(relx=0.9, rely=0.7, anchor=CENTER)
 
 # MELISSA RINCON
 # fr_parametros

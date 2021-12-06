@@ -72,20 +72,24 @@ check_lfun = tk.BooleanVar()
 
 def graficar():
     fig = plt.Figure(figsize=(4, 2), dpi=100)
-    t = np.arange(0, 10, 0.01)
+    t = np.arange(0, variable_years.get(), 0.01)
     sub = fig.add_subplot(111)
 
-    if check_sfun.get() == 1:
-        sub.plot(t, fun_s(t))
-    if check_ifun.get() == 1:
-        sub.plot(t, fun_i(t))
-    if check_lfun.get() == 1:
-        sub.plot(t, fun_l(t))
-    if check_efun.get() == 1:
-        sub.plot(t, fun_e(t))
+    var_bools = {
+            "S":check_sfun.get(),
+            "I":check_ifun.get(),
+            "L":check_lfun.get(),
+            "E":check_efun.get()
+        }
 
-    fig.suptitle("Funciones")
+    functions = get_functions(var_bools, t)
 
+    for key in functions:
+        sub.plot(t, functions[key], label=key)
+
+    fig.suptitle(variable_method.get())
+
+    sub.legend()
     plt.close()
     plt.style.use('seaborn-darkgrid')
     Plot = FigureCanvasTkAgg(fig, master=fr_graph)
@@ -122,6 +126,9 @@ check_lfun.set(True)
 Style.configure('Title.TLabel', font=('Agency FB', 25, 'bold'), foreground='#102c59', padding=0)
 Style.configure('Time.TLabel', font=('Agency FB', 25, 'bold'), foreground='#c9bc06', padding=0)
 
+num_initalYear = tk.StringVar()
+num_finalYear = tk.StringVar()
+
 label_time = ttk.Label(master=fr_time, text="Tiempo de simulación", style="Title.TLabel")
 label_time.place(relx=0.5, rely=0.3, anchor=CENTER)
 
@@ -138,29 +145,10 @@ def validate_year(P):
     return validate_integer(P)
 
 
-label_total = ttk.Label(master=fr_time, text="0 años", style="Time.TLabel")
-label_total.place(relx=0.9, rely=0.7, anchor=CENTER)
-
-num_initalYear = tk.StringVar()
-num_initalYear.trace("w", lambda name, index, mode, num_initalYear=num_initalYear: set_years())
-entry_initial = ttk.Entry(master=fr_time, textvariable=num_initalYear, font=('Agency FB', 25, 'bold'), width=11)
-entry_initial.config(validate="key", validatecommand=(entry_initial.register(validate_year), "%P"))
-entry_initial.place(relx=0.2, rely=0.7, anchor=CENTER)
-
-num_finalYear = tk.StringVar()
-num_finalYear.trace("w", lambda name, index, mode, num_finalYear=num_finalYear: set_years())
-entry_final = ttk.Entry(master=fr_time, textvariable=num_finalYear, font=('Agency FB', 25, 'bold'), width=11)
-entry_final.config(validate="key", validatecommand=(entry_final.register(validate_year), "%P"))
-entry_final.place(relx=0.6, rely=0.7, anchor=CENTER)
-
-variable_years = tk.IntVar()
-variable_years.set(0)
-
-
 def set_years():
-    if (num_initalYear.get() == ""):
+    if num_initalYear.get() == "":
         num_initalYear.set("0")
-    if (num_finalYear.get() == ""):
+    if num_finalYear.get() == "":
         num_finalYear.set("0")
 
     temp_years = int(num_finalYear.get()) - int(num_initalYear.get())
@@ -174,6 +162,25 @@ def set_years():
     global label_total
     label_total.config(text="{} años".format(variable_years.get()))
 
+
+label_total = ttk.Label(master=fr_time, text="21 años", style="Time.TLabel")
+label_total.place(relx=0.9, rely=0.7, anchor=CENTER)
+
+num_initalYear.trace("w", lambda name, index, mode, num_initalYear=num_initalYear: set_years())
+entry_initial = ttk.Entry(master=fr_time, textvariable=num_initalYear, font=('Agency FB', 25, 'bold'), width=11)
+entry_initial.config(validate="key", validatecommand=(entry_initial.register(validate_year), "%P"))
+entry_initial.place(relx=0.2, rely=0.7, anchor=CENTER)
+
+num_finalYear.trace("w", lambda name, index, mode, num_finalYear=num_finalYear: set_years())
+entry_final = ttk.Entry(master=fr_time, textvariable=num_finalYear, font=('Agency FB', 25, 'bold'), width=11)
+entry_final.config(validate="key", validatecommand=(entry_final.register(validate_year), "%P"))
+entry_final.place(relx=0.6, rely=0.7, anchor=CENTER)
+
+variable_years = tk.IntVar()
+
+num_initalYear.set(2000)
+num_finalYear.set(2021)
+variable_years.set(21)
 
 # fr_parameters
 label_parameters = ttk.Label(master=fr_parameters, text="Parámetros", style="Title.TLabel")
@@ -239,14 +246,23 @@ Style.map("secondary.TButton",
 
 methods = ["Euler adelante", "Euler atrás", "Euler modificado", "Runge–Kutta 2", "Runge–Kutta 4", "solve_ivp"]
 button_methods = []
+
+variable_method = tk.StringVar()
 yPos_methods = 0.3
 
-for method in methods:
-    button_method = ttk.Button(master=fr_solutions, text=method, style="secondary.TButton")
-    button_method.place(relx=0.5, rely=yPos_methods, anchor=CENTER)
 
-    button_methods.append(button_method)
+def set_method(name):
+    variable_method.set(name)
+    graficar()
+
+
+for i in range(len(methods)):
+    button_methods.append(ttk.Button(master=fr_solutions, text=methods[i], style="secondary.TButton"
+                                     , command=lambda c=i: set_method(methods[c])))
+    button_methods[i].place(relx=0.5, rely=yPos_methods, anchor=CENTER)
     yPos_methods += 0.1
+
+variable_method.set(methods[0])
 
 # Excecution
 graficar()

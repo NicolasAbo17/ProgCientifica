@@ -1,14 +1,26 @@
 def fun_s(t):
-    return t
+    return 0.5 * t
 
 
 def fun_e(t):
-    return 2 * t
+    return t
 
 
 def fun_i(t):
-    return 3 * t
+    return 2 * t
 
 
 def fun_l(t):
-    return 0.5 * t
+    return 3 * t
+
+def get_functions(var_bools, t):
+    funs = {}
+    if var_bools["S"] == 1:
+        funs["S"] = fun_s(t)
+    if var_bools["E"] == 1:
+        funs["E"] = fun_e(t)
+    if var_bools["I"] == 1:
+        funs["I"] = fun_i(t)
+    if var_bools["L"] == 1:
+        funs["L"] = fun_l(t)
+    return funs

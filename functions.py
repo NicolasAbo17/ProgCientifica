@@ -13,8 +13,10 @@ def fun_i(t):
 def fun_l(t):
     return 3 * t
 
-def get_functions(var_bools, t):
+
+def get_functions(var_bools, pLambda, pBeta, pDelta, pP, pMiu, pK, pR1, pR2, pFi, pGamma, pD1, pD2, t):
     funs = {}
+
     if var_bools["S"] == 1:
         funs["S"] = fun_s(t)
     if var_bools["E"] == 1:

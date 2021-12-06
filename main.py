@@ -76,13 +76,18 @@ def graficar():
     sub = fig.add_subplot(111)
 
     var_bools = {
-            "S":check_sfun.get(),
-            "I":check_ifun.get(),
-            "L":check_lfun.get(),
-            "E":check_efun.get()
-        }
+        "S": check_sfun.get(),
+        "I": check_ifun.get(),
+        "L": check_lfun.get(),
+        "E": check_efun.get()
+    }
 
-    functions = get_functions(var_bools, t)
+    functions = get_functions(var_bools, variables_parameters[0].get(), variables_parameters[1].get(),
+                              variables_parameters[2].get(), variables_parameters[3].get(),
+                              variables_parameters[4].get(), variables_parameters[5].get(),
+                              variables_parameters[6].get(), variables_parameters[7].get(),
+                              variables_parameters[8].get(), variables_parameters[9].get(),
+                              variables_parameters[10].get(), variables_parameters[11].get(), t)
 
     for key in functions:
         sub.plot(t, functions[key], label=key)

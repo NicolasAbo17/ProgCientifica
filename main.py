@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg)
 import numpy as np
 import re
+import struct as st
 
 from functions import *
 
@@ -45,11 +46,73 @@ fr_solutions.config(width=325, height=300)
 # Implementacion de los frames
 # fr_buttons
 def exportar():
-    return
+    items=[]
 
+    actual = variable_method.get()
+    if actual == "Euler adelante":
+        items.append(0)
+    if actual == "Euler atrás":
+        items.append(1)
+    if actual == "Euler modificado":
+        items.append(2)
+    if actual == "Runge–Kutta 2":
+        items.append(3)
+    if actual == "Runge–Kutta 4":
+        items.append(4)
+    if actual == "solve_ivp":
+        items.append(5)
+
+    items.append(float(check_sfun.get()))
+    items.append(float(check_efun.get()))
+    items.append(float(check_ifun.get()))
+    items.append(float(check_lfun.get()))
+
+    for variable in variables_parameters:
+        items.append(float(variable.get()))
+
+    items.append(float(num_initalYear.get()))
+    items.append(float(num_finalYear.get()))
+
+    fhdl = open("graph.bin", "wb")
+    save = st.pack("d"*int(len(items)), *items)
+    fhdl.write(save)
+    fhdl.close()
 
 def importar():
-    return
+    fhdl = open("graph.bin", "wb")
+    open = fhdl.read()
+    items = st.unpack("d"*int(len(open)/8), open)
+    fhdl.close()
+
+    actual = variable_method.get()
+    if items[0] == 0:
+        variable_method.set("Euler adelante")
+    if items[0] == 1:
+        variable_method.set("Euler atrás")
+    if items[0] == 2:
+        variable_method.set("Euler modificado")
+    if items[0] == 3:
+        variable_method.set("Runge–Kutta 2")
+    if items[0] == 4:
+        variable_method.set("Runge–Kutta 4")
+    if items[0] == 5:
+        variable_method.set("solve_ivp")
+
+    check_sfun.set(int(items[1]) == 1)
+    check_efun.set(int(items[2]) == 1)
+    check_ifun.set(int(items[3]) == 1)
+    check_lfun.set(int(items[4]) == 1)
+
+    ref = 5
+    for variable in variables_parameters:
+        variable.set(str(float(items[ref])))
+        ref += 1
+
+    num_initalYear.set(str(int(items[ref])))
+    num_finalYear.set(str(int(items[ref+1])))
+
+    graficar()
+
 
 
 Style.configure('primary.TButton', font=('Agency FB', 17, 'bold'), foreground='#102c59', background='#1b1052',
@@ -72,22 +135,25 @@ check_lfun = tk.BooleanVar()
 
 def graficar():
     fig = plt.Figure(figsize=(4, 2), dpi=100)
-    t = np.arange(0, variable_years.get(), 0.01)
+
+    h = 0.01
+    t = np.arange(num_initalYear.get(), num_finalYear.get() + h, h)
     sub = fig.add_subplot(111)
 
     var_bools = {
         "S": check_sfun.get(),
+        "E": check_efun.get(),
         "I": check_ifun.get(),
-        "L": check_lfun.get(),
-        "E": check_efun.get()
+        "L": check_lfun.get()
     }
 
-    functions = get_functions(var_bools, variables_parameters[0].get(), variables_parameters[1].get(),
+    functions = get_functions(var_bools, variable_method.get(), num_initalYear.get(), num_finalYear.get(),
+                              variables_parameters[0].get(), variables_parameters[1].get(),
                               variables_parameters[2].get(), variables_parameters[3].get(),
                               variables_parameters[4].get(), variables_parameters[5].get(),
                               variables_parameters[6].get(), variables_parameters[7].get(),
                               variables_parameters[8].get(), variables_parameters[9].get(),
-                              variables_parameters[10].get(), variables_parameters[11].get(), t)
+                              variables_parameters[10].get(), variables_parameters[11].get(), t, h)
 
     for key in functions:
         sub.plot(t, functions[key], label=key)
